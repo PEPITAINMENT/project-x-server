@@ -4,6 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProjextX.Hubs;
+using ProjextX.Repositories;
+using ProjextX.Services;
+using ProjextX.Services.Interfaces;
 
 namespace ProjextX
 {
@@ -22,6 +25,10 @@ namespace ProjextX
             services.AddCors();
             services.AddSignalR();
             services.AddControllers();
+            services.AddSingleton<IUserGamesService, UserGamesService>();
+            services.AddSingleton<IGameRepository, GameRepository>();
+            services.AddSingleton<IGameStatusService, GameStatusService>();
+            services.AddTransient<IGameHubNotificator, GameHubNotificator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
