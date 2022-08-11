@@ -362,3 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /.sonarqube/conf
+/dotCover.Output
+/dotCover.Output.html

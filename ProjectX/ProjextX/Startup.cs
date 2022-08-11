@@ -8,9 +8,11 @@ using ProjextX.Hubs;
 using ProjextX.Repositories;
 using ProjextX.Services;
 using ProjextX.Services.Interfaces;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ProjextX
 {
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         public Startup(IConfiguration configuration)

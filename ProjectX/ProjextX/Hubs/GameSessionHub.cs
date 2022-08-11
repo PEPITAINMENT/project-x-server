@@ -9,11 +9,11 @@ namespace ProjextX.Hubs
 {
     public class GameSessionHub : Hub
     {
-        private int maxUsersCount = 2;
-        private IUserGamesService _userGamesService;
-        private IGameRepository _gameRepository;
-        private IGameHubNotificator _gameHubNotificator;
-        private IGameStatusService _gameStatusService;
+        private readonly int maxUsersCount = 2;
+        private readonly IUserGamesService _userGamesService;
+        private readonly IGameRepository _gameRepository;
+        private readonly IGameHubNotificator _gameHubNotificator;
+        private readonly IGameStatusService _gameStatusService;
         public GameSessionHub(IUserGamesService userGamesService,
             IGameRepository gameRepository,
             IGameHubNotificator gameHubNotificator,
@@ -24,7 +24,7 @@ namespace ProjextX.Hubs
             _gameStatusService = gameStatusService;
         }
 
-        public async void Join(string gameId) {
+        public async Task Join(string gameId) {
             if (_userGamesService.GetUsersInGroup(gameId) >= maxUsersCount) {
                 await this.Clients.Caller.SendAsync("onNoSlots");
                 return;
@@ -49,7 +49,7 @@ namespace ProjextX.Hubs
             }
         }
 
-        public async void Guess(string gameId, string message) {
+        public async Task Guess(string gameId, string message) {
             //compare message and update game state
 
             await this.Clients.Group(gameId).SendAsync("updateGameState", "GAME STATE");

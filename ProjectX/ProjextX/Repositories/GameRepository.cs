@@ -32,7 +32,7 @@ namespace ProjextX.Repositories
 
     public class GameRepository : IGameRepository
     {
-        private List<Game> _games = new List<Game>() {
+        private readonly List<Game> _games = new List<Game>() {
             new Game() { Id = "1" },
             new Game() { Id = "2" },
         };
@@ -48,7 +48,7 @@ namespace ProjextX.Repositories
 
     public class GameHubNotificator : IGameHubNotificator
     {
-        private IHubContext<GameSessionHub> _hub;
+        private readonly IHubContext<GameSessionHub> _hub;
         public GameHubNotificator(IHubContext<GameSessionHub> hub) {
             _hub = hub;
         }

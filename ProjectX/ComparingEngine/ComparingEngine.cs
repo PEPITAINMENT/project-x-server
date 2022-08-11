@@ -5,7 +5,7 @@ namespace CompareEngine
 {
     public class ComparingEngine : IComparingEngine
     {
-        private int _matchPercent;
+        private readonly int _matchPercent;
         public ComparingEngine(int matchPercent) {
             if (matchPercent < 0 || matchPercent > 100) {
                 throw new ArgumentException("Matching percent should be between 0 and 100");

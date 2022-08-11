@@ -6,7 +6,7 @@ namespace ProjextX.Services
 {
     public class UserGamesService : IUserGamesService
     {
-        private Dictionary<string, string> _userGames = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _userGames = new Dictionary<string, string>();
 
         public bool IsUserHasActiveGame(string userIdentifier) {
             return _userGames.ContainsKey(userIdentifier);
