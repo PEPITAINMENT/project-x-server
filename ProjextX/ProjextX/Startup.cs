@@ -1,3 +1,4 @@
+using CompareEngine;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +30,7 @@ namespace ProjextX
             services.AddSingleton<IGameRepository, GameRepository>();
             services.AddSingleton<IGameStatusService, GameStatusService>();
             services.AddTransient<IGameHubNotificator, GameHubNotificator>();
+            services.AddTransient<IComparingEngine, ComparingEngine>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
