@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjextX", "ProjextX\ProjextX.csproj", "{B2651C39-37B6-4338-B147-71B3217649B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "ProjextX\Server.csproj", "{B2651C39-37B6-4338-B147-71B3217649B7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComparingEngine", "ComparingEngine\ComparingEngine.csproj", "{99597D2F-7894-4546-A2C0-BC823375D505}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComparingEngineTest", "ComparingEngineTest\ComparingEngineTest.csproj", "{36BD7C07-70B2-4870-A689-D9B0AAD7C7DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerTest", "ServerTest\ServerTest.csproj", "{ED03C41B-4718-4C70-BAD8-3775B73502E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{36BD7C07-70B2-4870-A689-D9B0AAD7C7DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36BD7C07-70B2-4870-A689-D9B0AAD7C7DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36BD7C07-70B2-4870-A689-D9B0AAD7C7DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED03C41B-4718-4C70-BAD8-3775B73502E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED03C41B-4718-4C70-BAD8-3775B73502E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED03C41B-4718-4C70-BAD8-3775B73502E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED03C41B-4718-4C70-BAD8-3775B73502E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
