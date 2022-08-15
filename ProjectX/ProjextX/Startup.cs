@@ -1,3 +1,4 @@
+using ComparingEngine;
 using ComparingEngine.FuzzyComaprer;
 using GameBussinesLogic.Repositories;
 using GameBussinesLogic.Runner;
@@ -39,6 +40,7 @@ namespace ProjextX
             services.AddSingleton<IGameStatusService, GameStatusService>();
             services.AddSingleton<IHubNotificator, HubNotificator>();
             services.AddTransient<IFuzzyComparer, FuzzyComparer>(x => new FuzzyComparer(compareMatchPercent));
+            services.AddTransient<ISongCompareEngine, SongCompareEngine>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -16,7 +16,7 @@ namespace ComparingEngine
         Title,
     }
 
-    public class SongCompareEngine
+    public class SongCompareEngine : ISongCompareEngine
     {
         private readonly IFuzzyComparer _comparer;
 
