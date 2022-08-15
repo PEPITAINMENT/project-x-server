@@ -1,4 +1,4 @@
-using CompareEngine;
+using ComparingEngine.FuzzyComaprer;
 using NUnit.Framework;
 using System;
 
@@ -10,7 +10,7 @@ namespace ComparingEngineTest
         [TestCase(101)]
         public void Invalid_Percent_Parameter_Throws_Exception(int matchingPercent)
         {
-            Assert.Throws<ArgumentException>(() => new ComparingEngine(matchingPercent));
+            Assert.Throws<ArgumentException>(() => new FuzzyComparer(matchingPercent));
         }
 
         [TestCase("Somelikeyou - Nilleto", "Nilleto", true)]
@@ -20,7 +20,7 @@ namespace ComparingEngineTest
         public void IsMatch_Is_Match_Partial(string main, string matching, bool expected)
         {
             var percent = 80;
-            var comparingEngine = new ComparingEngine(percent);
+            var comparingEngine = new FuzzyComparer(percent);
             var result = comparingEngine.IsMatch(main, matching);
             Assert.That(result, Is.EqualTo(expected));
         }

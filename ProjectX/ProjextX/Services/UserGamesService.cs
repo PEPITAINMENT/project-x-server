@@ -30,8 +30,8 @@ namespace ProjextX.Services
             return _userGames.Values.Count(element => element == gameId);
         }
 
-        public void Remove(string gameId) {
-            _userGames.Remove(gameId);
+        public void Remove(string userIdentifier) {
+            _userGames.Remove(userIdentifier);
         }
     }
 }

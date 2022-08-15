@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.SignalR;
-using ProjextX.Repositories;
+﻿using Microsoft.AspNetCore.SignalR;
 using ProjextX.Services.Interfaces;
+using Server.HubNotificator;
 using System;
 using System.Threading.Tasks;
 
@@ -11,16 +10,13 @@ namespace ProjextX.Hubs
     {
         private readonly int maxUsersCount = 2;
         private readonly IUserGamesService _userGamesService;
-        private readonly IGameRepository _gameRepository;
-        private readonly IGameHubNotificator _gameHubNotificator;
+        private readonly IHubNotificator _hubNotificator;
         private readonly IGameStatusService _gameStatusService;
         public GameSessionHub(IUserGamesService userGamesService,
-            IGameRepository gameRepository,
-            IGameHubNotificator gameHubNotificator,
+            IHubNotificator hubNotificator,
             IGameStatusService gameStatusService) {
             _userGamesService = userGamesService;
-            _gameRepository = gameRepository;
-            _gameHubNotificator = gameHubNotificator;
+            _hubNotificator = hubNotificator;
             _gameStatusService = gameStatusService;
         }
 
@@ -33,7 +29,7 @@ namespace ProjextX.Hubs
             if (_userGamesService.IsUserHasActiveGame(Context.ConnectionId)) {
                 var activeGameId = _userGamesService.GetUserActiveGameId(Context.ConnectionId);
                 await this.Groups.RemoveFromGroupAsync(Context.ConnectionId, activeGameId);
-                ClearDateAssociatedWithGame(activeGameId);
+                ClearDateAssociatedWithUser(Context.ConnectionId);
             }
 
             _userGamesService.AddUserToGame(Context.ConnectionId, gameId);
@@ -42,11 +38,7 @@ namespace ProjextX.Hubs
         }
 
         public void RunGame(string gameId) {
-            var game = _gameRepository.GetGame(gameId);
-            if (game != null)
-            {
-                _gameHubNotificator.RunGame(game);
-            }
+            _hubNotificator.RunGame(gameId);
         }
 
         public async Task Guess(string gameId, string message) {
@@ -69,14 +61,17 @@ namespace ProjextX.Hubs
             {
                 var activeGameId = _userGamesService.GetUserActiveGameId(Context.ConnectionId);
                 this.Groups.RemoveFromGroupAsync(Context.ConnectionId, activeGameId).ConfigureAwait(false);
-                ClearDateAssociatedWithGame(activeGameId);
+                ClearDateAssociatedWithUser(activeGameId);
+
+                if (_userGamesService.GetUsersInGroup(activeGameId) == 0) {
+                    _hubNotificator.StopGame(activeGameId);
+                }
             }
             return base.OnDisconnectedAsync(exception);
         }
 
-        public void ClearDateAssociatedWithGame(string gameId) {
-            _userGamesService.Remove(gameId);
-            _gameStatusService.Remove(gameId);
+        public void ClearDateAssociatedWithUser(string userId) {
+            _userGamesService.Remove(userId);
         }
     }
 }

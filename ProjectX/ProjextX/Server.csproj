@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ComparingEngine\ComparingEngine.csproj" />
+    <ProjectReference Include="..\GameBussinesLogic\GameBussinesLogic.csproj" />
   </ItemGroup>
 
 
