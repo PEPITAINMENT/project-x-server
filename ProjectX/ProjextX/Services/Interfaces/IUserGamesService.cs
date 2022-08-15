@@ -6,6 +6,6 @@
         string GetUserActiveGameId(string userIdentifier);
         void AddUserToGame(string userIdentifier, string gameId);
         int GetUsersInGroup(string gameId);
-        void Remove(string gameId);
+        void Remove(string userIdentifier);
     }
 }

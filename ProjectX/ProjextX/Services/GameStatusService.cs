@@ -17,7 +17,8 @@ namespace ProjextX.Services
         public void AddReadyStatus(string gameId) {
             if (_readyStatuses.TryGetValue(gameId, out var readyStatuses))
             {
-                _readyStatuses.Add(gameId, readyStatuses += 1);
+                readyStatuses += 1;
+                _readyStatuses.Add(gameId, readyStatuses);
                 return;
             }
 
