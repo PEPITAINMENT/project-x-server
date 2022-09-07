@@ -43,7 +43,6 @@ namespace ProjextX.Hubs
 
         public async Task Guess(string gameId, string message) {
             //compare message and update game state
-
             await this.Clients.Group(gameId).SendAsync("updateGameState", "GAME STATE");
         }
 
