@@ -1,13 +1,9 @@
 ﻿using ComparingEngine.FuzzyComaprer;
+using SongBussinsLogic.Models;
 using System;
 
 namespace ComparingEngine
 {
-    public interface ISong { 
-        string Author { get; set; }
-        string Title { get; set; }
-    }
-
     [Flags]
     public enum GuessSongProperties
     { 

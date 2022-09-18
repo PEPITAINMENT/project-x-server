@@ -1,4 +1,6 @@
-﻿namespace ComparingEngine
+﻿using SongBussinsLogic.Models;
+
+namespace ComparingEngine
 {
     public interface ISongCompareEngine
     {
