@@ -1,34 +1,73 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System;
+using Microsoft.Extensions.Configuration;
 
 namespace Server.Controlles
 {
     [Route("/")]
     public class LoginController : Controller
     {
-        [HttpGet("login")]
-        public IActionResult Login()
+        private const int DEFAULT_LIFE_TIME = 10;
+        private readonly IConfiguration _configuration;
+        public LoginController(IConfiguration configuration) 
         {
-            if (!User.Identity.IsAuthenticated)
+            _configuration = configuration;
+        }
+
+        [HttpPost("/token")]
+        public IActionResult Token([FromBody] TokenModel token)
+        {
+            if(token == null)
             {
-                return Challenge("Spotify");
+                return BadRequest();
             }
 
-            HttpContext.Response.Cookies.Append("spotify_username", User.Identity.Name);
-            HttpContext.SignInAsync(User);
-            return View();
+            var now = DateTime.UtcNow;
+            var expiresTime = GetExpriresTime(now);
+            var claims = new List<Claim>()
+            {
+                new Claim("mussic_auth", token.Token)
+            };
+
+            var jwtToken = GetJwtToken(now, expiresTime, claims);
+
+            var response = new
+            {
+                access_token = jwtToken
+            };
+            return Json(response);
         }
 
-        [HttpPost("callback")]
-        public IActionResult Callback()
-        {
-            return new EmptyResult();
+        private DateTime GetExpriresTime(DateTime now) {
+            var lifeTimeString = _configuration.GetSection("JWT:LifetimeMinutes").Value;
+            var time = DEFAULT_LIFE_TIME;
+            if (int.TryParse(lifeTimeString, out var value))
+            {
+                time = value;
+            }
+
+            return now.Add(TimeSpan.FromMinutes(time));
         }
 
-        [HttpGet("some")]
-        public IActionResult Some()
+        private string GetJwtToken(DateTime now, DateTime expiresTime, IEnumerable<Claim> claims)
         {
-            return new EmptyResult();
+            var jwt = new JwtSecurityToken(
+                issuer: _configuration.GetSection("JWT:Issuer").Value,
+                audience: _configuration.GetSection("JWT:Audience").Value,
+                notBefore: now,
+                claims: claims,
+                expires: expiresTime,
+                signingCredentials: new SigningCredentials(
+                    AuthOptions.GetSymmetricSecurityKey(
+                        _configuration.GetSection("JWT:Secret").Value),
+                        SecurityAlgorithms.HmacSha256));
+            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            return encodedJwt;
         }
     }
 }

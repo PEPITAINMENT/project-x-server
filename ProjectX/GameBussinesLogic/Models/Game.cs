@@ -6,7 +6,6 @@ namespace GameBussinesLogic.Models
     {
         public string Name { get; set; }
         public GameStatus Status { get; set; }
-
         public string PlayListId { get; set; }
     }
 }

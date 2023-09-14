@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProjextX.Hubs
 {
+    [Authorize]
     public class GameSessionHub : Hub
     {
         private readonly int maxUsersCount = 2;
