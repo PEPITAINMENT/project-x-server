@@ -16,6 +16,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Server;
+using GameBussinesLogic.Models;
+using SongsProvider.Spotify;
+using Server.OAuthService;
+using SongsProvider.Spotify.Interfaces;
 
 namespace ProjextX
 {
@@ -32,6 +36,10 @@ namespace ProjextX
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var oAuth = new OAuthService(
+                   "c004920e4d3b45f183a9bdf18fd3517b",
+                   "6e391f8122fe456a83189a7f8786d544",
+                   "https://accounts.spotify.com/api/token");
             var compareMatchPercent = int.Parse(Configuration["CompareMatchPercent"]);
             var songDelaySeconds = int.Parse(Configuration["SongDelaySeconds"]);
             AddAuth(services);
@@ -40,7 +48,9 @@ namespace ProjextX
             services.AddMvc();
             services.AddSignalR();
             services.AddControllers();
-            services.AddSingleton<IGameRunner, GameRunner>(x => new GameRunner(songDelaySeconds));
+            services.AddTransient<ISpotifyApiService, SpotifyApiService>(x => new SpotifyApiService(oAuth.GetToken()));
+            services.AddTransient<ISongProvider, SpotifySongProvider>();
+            services.AddSingleton<IGameRunner, GameRunner>(x => new GameRunner(songDelaySeconds, x.GetService<ISongProvider>()));
             services.AddSingleton<IUserGamesService, UserGamesService>();
             services.AddSingleton<IGameRepository, GameRepository>();
             services.AddSingleton<IGameStatusService, GameStatusService>();

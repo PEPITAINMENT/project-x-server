@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace GameBussinesLogic.Runner
 {
     public interface IGameRunner
     {
         event Action<string, string> OnSongChange;
-        void RunGame(string gameId);
+        Task RunGame(string gameId, string playList);
         void StopGame(string gameId);
     }
 }

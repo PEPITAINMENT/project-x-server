@@ -39,8 +39,8 @@ namespace ProjextX.Hubs
             await this.Clients.OthersInGroup(gameId).SendAsync("onUserJoin", Context.ConnectionId);
         }
 
-        public void RunGame(string gameId) {
-            _hubNotificator.RunGame(gameId);
+        public async void RunGame(string gameId, string playList) {
+            await _hubNotificator.RunGame(gameId, playList);
         }
 
         public async Task Guess(string gameId, string message) {
@@ -50,10 +50,6 @@ namespace ProjextX.Hubs
 
         public void SetReadyStatus(string gameId) {
             _gameStatusService.AddReadyStatus(gameId);
-            var usersInGroup = _userGamesService.GetUsersInGroup(gameId);
-            if (_gameStatusService.IsGameCanStarted(gameId, usersInGroup)) {
-                RunGame(gameId);
-            }
         }
 
         public override Task OnDisconnectedAsync(Exception exception)

@@ -1,6 +1,7 @@
 ﻿using GameBussinesLogic.Runner;
 using Microsoft.AspNetCore.SignalR;
 using ProjextX.Hubs;
+using System.Threading.Tasks;
 
 namespace Server.HubNotificator
 {
@@ -19,9 +20,9 @@ namespace Server.HubNotificator
             _gameRunner.OnSongChange += OnSongChange;
         }
 
-        public void RunGame(string gameId)
+        public async Task RunGame(string gameId, string playList)
         {
-            _gameRunner.RunGame(gameId);
+            await _gameRunner.RunGame(gameId, playList);
         }
 
         public void StopGame(string gameId) {

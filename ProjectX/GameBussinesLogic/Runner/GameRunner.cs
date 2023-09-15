@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GameBussinesLogic.Models;
+using GameBussinesLogic.Songs.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,21 +14,27 @@ namespace GameBussinesLogic.Runner
         private readonly Dictionary<string, CancellationTokenSource> _tokens 
             = new Dictionary<string, CancellationTokenSource>();
         private readonly int _songDelaySeconds;
+        private readonly ISongProvider _songProvider;
 
-        public GameRunner(int songDelaySeconds) {
+        public GameRunner(int songDelaySeconds, ISongProvider songProvider) {
             _songDelaySeconds = songDelaySeconds;
+            _songProvider = songProvider;
         }
 
-        public void RunGame(string gameId) {
+        public async Task RunGame(string gameId, string playList) {
             var cancelationTokenSource = new CancellationTokenSource();
             _tokens.Add(gameId, cancelationTokenSource);
-            Task.Factory.StartNew(() =>
+            await Task.Factory.StartNew(async () =>
             {
-                var list = new List<string>() { "One", "Two", "Three", "Four" };
-                foreach (var newSongLink in list) {
-                    OnSongChange?.Invoke(gameId, newSongLink);
-                    Thread.Sleep(TimeSpan.FromSeconds(_songDelaySeconds));
-                }
+                ISong song;
+                do {
+                    song = await _songProvider.GetNextSong(playList);
+
+                    if (song != null) {
+                        OnSongChange?.Invoke(gameId, song.PreviewUrl);
+                        Thread.Sleep(TimeSpan.FromSeconds(_songDelaySeconds));
+                    }
+                } while(song != null);
             });
         }
 
