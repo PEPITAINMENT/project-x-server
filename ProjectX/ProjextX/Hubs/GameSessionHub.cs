@@ -39,7 +39,7 @@ namespace ProjextX.Hubs
             await this.Clients.OthersInGroup(gameId).SendAsync("onUserJoin", Context.ConnectionId);
         }
 
-        public async void RunGame(string gameId, string playList) {
+        public async Task RunGame(string gameId, string playList) {
             await _hubNotificator.RunGame(gameId, playList);
         }
 

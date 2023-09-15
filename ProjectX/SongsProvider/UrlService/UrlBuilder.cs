@@ -20,7 +20,7 @@
                 {
                     url += $"{parameter.Key}={parameter.Value}&";
                 }
-                url.Remove(url.Length - 1);
+                url = url.Remove(url.Length - 1);
 
                 return url;
             }
