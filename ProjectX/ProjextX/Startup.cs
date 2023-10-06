@@ -42,6 +42,7 @@ namespace ProjextX
                    "https://accounts.spotify.com/api/token");
             var compareMatchPercent = int.Parse(Configuration["CompareMatchPercent"]);
             var songDelaySeconds = int.Parse(Configuration["SongDelaySeconds"]);
+            var resultsDelaySeconds = int.Parse(Configuration["ResultsDelaySeconds"]);
             AddAuth(services);
 
             services.AddCors();
@@ -50,7 +51,8 @@ namespace ProjextX
             services.AddControllers();
             services.AddTransient<ISpotifyApiService, SpotifyApiService>(x => new SpotifyApiService(oAuth.GetToken()));
             services.AddTransient<ISongProvider, SpotifySongProvider>();
-            services.AddSingleton<IGameRunner, GameRunner>(x => new GameRunner(songDelaySeconds, x.GetService<ISongProvider>()));
+            services.AddSingleton<IGameRunner, GameRunner>(x => 
+                new GameRunner(songDelaySeconds, resultsDelaySeconds, x.GetService<ISongProvider>()));
             services.AddSingleton<IUserGamesService, UserGamesService>();
             services.AddSingleton<IGameRepository, GameRepository>();
             services.AddSingleton<IGameStatusService, GameStatusService>();

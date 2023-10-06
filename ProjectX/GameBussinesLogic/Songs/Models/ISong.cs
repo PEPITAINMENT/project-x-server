@@ -9,5 +9,6 @@ namespace GameBussinesLogic.Songs.Models
 
         IExtendedUrls GetExtendedUrls();
         IEnumerable<IArtist> GetArtists();
+        string GetImageUrl();
     }
 }

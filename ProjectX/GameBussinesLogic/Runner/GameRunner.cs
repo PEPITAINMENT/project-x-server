@@ -2,6 +2,7 @@
 using GameBussinesLogic.Songs.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,14 +11,17 @@ namespace GameBussinesLogic.Runner
     public class GameRunner : IGameRunner
     {
         public event Action<string, string> OnSongChange;
+        public event Action<string, ISong> OnAnswerProvide;
 
         private readonly Dictionary<string, CancellationTokenSource> _tokens 
             = new Dictionary<string, CancellationTokenSource>();
         private readonly int _songDelaySeconds;
+        private readonly int _resultsDelaySeconds;
         private readonly ISongProvider _songProvider;
 
-        public GameRunner(int songDelaySeconds, ISongProvider songProvider) {
+        public GameRunner(int songDelaySeconds, int resultsDelaySeconds, ISongProvider songProvider) {
             _songDelaySeconds = songDelaySeconds;
+            _resultsDelaySeconds = resultsDelaySeconds;
             _songProvider = songProvider;
         }
 
@@ -33,6 +37,8 @@ namespace GameBussinesLogic.Runner
                     if (song != null) {
                         OnSongChange?.Invoke(gameId, song.PreviewUrl);
                         Thread.Sleep(TimeSpan.FromSeconds(_songDelaySeconds));
+                        OnAnswerProvide?.Invoke(gameId, song);
+                        Thread.Sleep(TimeSpan.FromSeconds(_resultsDelaySeconds));
                     }
                 } while(song != null);
             });

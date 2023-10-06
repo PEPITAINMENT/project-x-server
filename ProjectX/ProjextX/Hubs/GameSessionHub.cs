@@ -40,6 +40,11 @@ namespace ProjextX.Hubs
         }
 
         public async Task RunGame(string gameId, string playList) {
+            if(_gameStatusService.IsGameRunned(gameId))
+            {
+                return;
+            }
+
             await _hubNotificator.RunGame(gameId, playList);
         }
 

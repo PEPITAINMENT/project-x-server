@@ -23,7 +23,7 @@ namespace SongsProvider.Spotify
         {
             var limit = 1;
 
-            var fields = "items(track(artists(name), name, preview_url, external_urls))";
+            var fields = "items(track(artists(name), name, preview_url, external_urls, album(images(url))))";
             var urlBuilder = new UrlBuilder($"{_apiUrl}/playlists/{playListId}/tracks");
             urlBuilder.AddParameter("limit", limit.ToString());
             urlBuilder.AddParameter("offset", offset.ToString());
