@@ -1,7 +1,4 @@
-﻿using ComparingEngine;
-using ComparingEngine.FuzzyComaprer;
-using GameBussinesLogic.Repositories;
-using GameBussinesLogic.Runner;
+﻿using GameBussinesLogic.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -20,6 +17,10 @@ using GameBussinesLogic.Models;
 using SongsProvider.Spotify;
 using Server.OAuthService;
 using SongsProvider.Spotify.Interfaces;
+using GameBussinesLogic.IServices;
+using GameBussinesLogic.Services;
+using GameBussinesLogic.Comparer.FuzzyComaprer;
+using GameBussinesLogic.Comparer;
 
 namespace ProjextX
 {
@@ -51,14 +52,18 @@ namespace ProjextX
             services.AddControllers();
             services.AddTransient<ISpotifyApiService, SpotifyApiService>(x => new SpotifyApiService(oAuth.GetToken()));
             services.AddTransient<ISongProvider, SpotifySongProvider>();
-            services.AddSingleton<IGameRunner, GameRunner>(x => 
-                new GameRunner(songDelaySeconds, resultsDelaySeconds, x.GetService<ISongProvider>()));
             services.AddSingleton<IUserGamesService, UserGamesService>();
-            services.AddSingleton<IGameRepository, GameRepository>();
+
+            services.AddSingleton<IRoomRepository, RoomRepository>();
+            services.AddTransient<IRoomService, RoomService>();
+
             services.AddSingleton<IGameStatusService, GameStatusService>();
-            services.AddSingleton<IHubNotificator, HubNotificator>();
+
+
+            services.AddTransient<IHubNotificator, HubNotificator>();
             services.AddTransient<IFuzzyComparer, FuzzyComparer>(x => new FuzzyComparer(compareMatchPercent));
             services.AddTransient<ISongCompareEngine, SongCompareEngine>();
+            services.AddTransient<IGuessService, GuessService>();
         }
 
         public void AddAuth(IServiceCollection services) {

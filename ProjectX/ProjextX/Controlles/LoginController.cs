@@ -30,7 +30,9 @@ namespace Server.Controlles
             var expiresTime = GetExpriresTime(now);
             var claims = new List<Claim>()
             {
-                new Claim("mussic_auth", token.Token)
+                new Claim("mussic_auth", token.Token),
+                new Claim(JwtRegisteredClaimNames.Name, token.UserName),
+                new Claim(JwtRegisteredClaimNames.UniqueName, token.UserId)
             };
 
             var jwtToken = GetJwtToken(now, expiresTime, claims);

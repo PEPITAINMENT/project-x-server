@@ -1,4 +1,4 @@
-﻿using GameBussinesLogic.Runner;
+﻿using GameBussinesLogic.IServices;
 using GameBussinesLogic.Songs.Models;
 using Microsoft.AspNetCore.SignalR;
 using ProjextX.Hubs;
@@ -10,34 +10,35 @@ namespace Server.HubNotificator
     public class HubNotificator : IHubNotificator
     {
         private readonly IHubContext<GameSessionHub> _hub;
-        private readonly IGameRunner _gameRunner;
+        private readonly IRoomService _roomService;
 
         public HubNotificator(
             IHubContext<GameSessionHub> hub,
-            IGameRunner gameRunner)
+            IRoomService roomService)
         {
             _hub = hub;
-            _gameRunner = gameRunner;
+            _roomService = roomService;
 
-            _gameRunner.OnSongChange += OnSongChange;
-            _gameRunner.OnAnswerProvide += OnAnswerProvide;
+            _roomService.OnSongChange += OnSongChange;
+            _roomService.OnAnswerProvide += OnAnswerProvide;
         }
 
-        public async Task RunGame(string gameId, string playList)
+        public async Task RunGame(string roomId)
         {
-            await _gameRunner.RunGame(gameId, playList);
+            await _roomService.Run(roomId);
         }
 
-        public void StopGame(string gameId) {
-            _gameRunner.StopGame(gameId);
-        }
-
-        private void OnSongChange(string gameId, string songLink)
+        public void StopGame(string roomId)
         {
-            _hub.Clients.Groups(gameId).SendAsync("onSongPreviewLinkChanged", songLink);
+            _roomService.Stop(roomId);
         }
 
-        private void OnAnswerProvide(string gameId, ISong song)
+        private void OnSongChange(string roomId, ISong song)
+        {
+            _hub.Clients.Groups(roomId).SendAsync("onSongPreviewLinkChanged", song.PreviewUrl);
+        }
+
+        private void OnAnswerProvide(string roomId, ISong song)
         {
             var songPreview = new SongPreview()
             {
@@ -45,10 +46,11 @@ namespace Server.HubNotificator
                 Artists = string.Join(',', song.GetArtists()?.Select(x => x.Name)),
                 ImageUrl = song.GetImageUrl(),
             };
-            _hub.Clients.Groups(gameId).SendAsync("onAnswerShow", songPreview);
+            _hub.Clients.Groups(roomId).SendAsync("onAnswerShow", songPreview);
         }
 
-        class SongPreview { 
+        class SongPreview
+        {
             public string Title { get; set; }
             public string Artists { get; set; }
             public string ImageUrl { get; set; }

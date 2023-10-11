@@ -5,15 +5,11 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "ProjextX\Server.csproj", "{B2651C39-37B6-4338-B147-71B3217649B7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComparingEngine", "ComparingEngine\ComparingEngine.csproj", "{99597D2F-7894-4546-A2C0-BC823375D505}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComparingEngineTest", "ComparingEngineTest\ComparingEngineTest.csproj", "{36BD7C07-70B2-4870-A689-D9B0AAD7C7DC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerTest", "ServerTest\ServerTest.csproj", "{ED03C41B-4718-4C70-BAD8-3775B73502E2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameBussinesLogic", "GameBussinesLogic\GameBussinesLogic.csproj", "{913093A6-F26D-4EE9-BAAD-6CA6D262821B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SongsProvider", "SongsProvider\SongsProvider.csproj", "{8AC6D8EA-DAD7-44AA-957E-3FE6BC6C4601}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SongsProvider", "SongsProvider\SongsProvider.csproj", "{8AC6D8EA-DAD7-44AA-957E-3FE6BC6C4601}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,14 +21,6 @@ Global
 		{B2651C39-37B6-4338-B147-71B3217649B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2651C39-37B6-4338-B147-71B3217649B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2651C39-37B6-4338-B147-71B3217649B7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{99597D2F-7894-4546-A2C0-BC823375D505}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{99597D2F-7894-4546-A2C0-BC823375D505}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{99597D2F-7894-4546-A2C0-BC823375D505}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{99597D2F-7894-4546-A2C0-BC823375D505}.Release|Any CPU.Build.0 = Release|Any CPU
-		{36BD7C07-70B2-4870-A689-D9B0AAD7C7DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{36BD7C07-70B2-4870-A689-D9B0AAD7C7DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{36BD7C07-70B2-4870-A689-D9B0AAD7C7DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{36BD7C07-70B2-4870-A689-D9B0AAD7C7DC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ED03C41B-4718-4C70-BAD8-3775B73502E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ED03C41B-4718-4C70-BAD8-3775B73502E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED03C41B-4718-4C70-BAD8-3775B73502E2}.Release|Any CPU.ActiveCfg = Release|Any CPU

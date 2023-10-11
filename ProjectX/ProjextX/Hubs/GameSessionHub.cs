@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using GameBussinesLogic.IServices;
+using GameBussinesLogic.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using ProjextX.Services.Interfaces;
 using Server.HubNotificator;
-using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ProjextX.Hubs
@@ -10,70 +13,50 @@ namespace ProjextX.Hubs
     [Authorize]
     public class GameSessionHub : Hub
     {
-        private readonly int maxUsersCount = 2;
-        private readonly IUserGamesService _userGamesService;
+        private readonly IRoomService _roomService;
         private readonly IHubNotificator _hubNotificator;
-        private readonly IGameStatusService _gameStatusService;
-        public GameSessionHub(IUserGamesService userGamesService,
-            IHubNotificator hubNotificator,
-            IGameStatusService gameStatusService) {
-            _userGamesService = userGamesService;
+        public GameSessionHub(
+            IRoomService roomService,
+            IHubNotificator hubNotificator
+            ) {
+            _roomService = roomService;
             _hubNotificator = hubNotificator;
-            _gameStatusService = gameStatusService;
         }
 
-        public async Task Join(string gameId) {
-            if (_userGamesService.GetUsersInGroup(gameId) >= maxUsersCount) {
-                await this.Clients.Caller.SendAsync("onNoSlots");
-                return;
-            }
-
-            if (_userGamesService.IsUserHasActiveGame(Context.ConnectionId)) {
-                var activeGameId = _userGamesService.GetUserActiveGameId(Context.ConnectionId);
-                await this.Groups.RemoveFromGroupAsync(Context.ConnectionId, activeGameId);
-                ClearDateAssociatedWithUser(Context.ConnectionId);
-            }
-
-            _userGamesService.AddUserToGame(Context.ConnectionId, gameId);
-            await this.Groups.AddToGroupAsync(Context.ConnectionId, gameId);
-            await this.Clients.OthersInGroup(gameId).SendAsync("onUserJoin", Context.ConnectionId);
-        }
-
-        public async Task RunGame(string gameId, string playList) {
-            if(_gameStatusService.IsGameRunned(gameId))
+        public async Task Join(string roomId) {
+            var name = Context.User.Claims
+                .FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Name)?.Value;
+            var player = new Player()
             {
-                return;
+                Id = Context.User.Identity.Name,
+                Name = name,
+            };
+            var roomInfo = _roomService.GetRoomInfoModel(roomId);
+
+            await this.Groups.AddToGroupAsync(Context.ConnectionId, roomId);
+            _roomService.Join(roomId, player);
+
+            await this.Clients.OthersInGroup(roomId).SendAsync("onUserJoin", player);
+            await this.Clients.Caller.SendAsync("onJoin", roomInfo);
+        }
+
+        public async Task ChangePlaylist(string roomId, string playlist) {
+            var userId = Context.User.Identity.Name;
+            _roomService.UpdatePlaylist(roomId, userId, playlist);
+            await this.Clients.Group(roomId).SendAsync("onPlaylistChange", playlist);
+        }
+
+        public async Task RunGame(string roomId) {
+            await _hubNotificator.RunGame(roomId);
+        }
+
+        public async Task Guess(string roomId, string message) {
+            var playerId = Context.User.Identity.Name;
+            var points = _roomService.Guess(roomId, playerId, message);
+            var player = _roomService.GetPlayer(roomId, playerId);
+            if (points != 0) {
+                await this.Clients.Group(roomId).SendAsync("onUserAnswer", player);
             }
-
-            await _hubNotificator.RunGame(gameId, playList);
-        }
-
-        public async Task Guess(string gameId, string message) {
-            //compare message and update game state
-            await this.Clients.Group(gameId).SendAsync("updateGameState", "GAME STATE");
-        }
-
-        public void SetReadyStatus(string gameId) {
-            _gameStatusService.AddReadyStatus(gameId);
-        }
-
-        public override Task OnDisconnectedAsync(Exception exception)
-        {
-            if (_userGamesService.IsUserHasActiveGame(Context.ConnectionId))
-            {
-                var activeGameId = _userGamesService.GetUserActiveGameId(Context.ConnectionId);
-                this.Groups.RemoveFromGroupAsync(Context.ConnectionId, activeGameId).ConfigureAwait(false);
-                ClearDateAssociatedWithUser(activeGameId);
-
-                if (_userGamesService.GetUsersInGroup(activeGameId) == 0) {
-                    _hubNotificator.StopGame(activeGameId);
-                }
-            }
-            return base.OnDisconnectedAsync(exception);
-        }
-
-        public void ClearDateAssociatedWithUser(string userId) {
-            _userGamesService.Remove(userId);
         }
     }
 }

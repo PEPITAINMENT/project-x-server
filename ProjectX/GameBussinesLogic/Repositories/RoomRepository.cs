@@ -2,7 +2,7 @@
 
 namespace GameBussinesLogic.Repositories
 {
-    public interface IGameRepository : IMemoryStoredRepository<Game>
+    public class RoomRepository : MemoryStoredRepository<Room>, IRoomRepository
     {
     }
 }

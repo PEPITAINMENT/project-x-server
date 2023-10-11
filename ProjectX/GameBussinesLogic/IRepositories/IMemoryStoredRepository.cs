@@ -7,11 +7,9 @@ namespace GameBussinesLogic.Repositories
     {
         T Get(string id);
 
-        IList<T> GetAll();
+        ICollection<T> GetAll();
 
         void Add(T entity);
-
-        void Update(T entity);
 
         void Remove(string id);
     }
