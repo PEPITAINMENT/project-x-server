@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using GameBussinesLogic.Songs.Models;
 using System;
+using GameBussinesLogic.Comparer;
 
 namespace GameBussinesLogic.Models
 {
@@ -34,10 +35,10 @@ namespace GameBussinesLogic.Models
                 {
                     token.ThrowIfCancellationRequested();
                     song = await songProvider.GetNextSong(PlaylistId);
-
                     if (song != null)
                     {
                         LastSong = song;
+                        UpdateLastGuess();
                         OnSongChange?.Invoke(Id, song);
                         Thread.Sleep(TimeSpan.FromSeconds(30));
                         OnAnswerProvide?.Invoke(Id, song);
@@ -56,6 +57,14 @@ namespace GameBussinesLogic.Models
         {
             _cancellationTokenSource.Cancel();
             Status = GameStatus.Ended;
+        }
+
+        private void UpdateLastGuess() { 
+            foreach(var player in Players)
+            {
+                player.LastGuess = GuessSongProperties.None;
+                player.NewPoints = 0;
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ using GameBussinesLogic.Models;
 using GameBussinesLogic.Repositories;
 using GameBussinesLogic.Songs.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -52,13 +53,19 @@ namespace GameBussinesLogic.Services
             return _roomRepository.Get(roomId);
         }
 
+        public void Remove(string roomId)
+        {
+            _roomRepository.Remove(roomId);
+        }
+
         public RoomInfoModel GetRoomInfoModel(string roomId) {
             var room = _roomRepository.Get(roomId);
             return new RoomInfoModel()
             {
                 PlaylistId = room.PlaylistId,
                 Name = room.Name,
-                Players = room.Players
+                Players = room.Players,
+                Status = room.Status
             };
         }
 
@@ -91,6 +98,28 @@ namespace GameBussinesLogic.Services
             }
 
             room.Players.Add(player);
+        }
+
+        public bool IsAdmin(string roomId, string playerId)
+        {
+            var room = _roomRepository.Get(roomId);
+            if (room == null)
+            {
+                throw new Exception("No room");
+            }
+            
+            return room.AdminId == playerId;
+        }
+
+        public void Disconnect(string roomId, string playerId)
+        {
+            var room = _roomRepository.Get(roomId);
+            if (room == null)
+            {
+                throw new Exception("No room");
+            }
+            var player = room.Players.FirstOrDefault(x => x.Id == playerId);
+            room.Players.Remove(player);
         }
 
         public async Task Run(string roomId)

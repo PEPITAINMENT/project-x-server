@@ -1,6 +1,7 @@
 ﻿using GameBussinesLogic.Models;
 using GameBussinesLogic.Songs.Models;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GameBussinesLogic.IServices
@@ -12,6 +13,9 @@ namespace GameBussinesLogic.IServices
 
         string Create(string adminId, string name);
         Room Get(string roomId);
+        void Disconnect(string roomId, string playerId);
+        void Remove(string roomId);
+        bool IsAdmin(string roomId, string playerId);
         void Join(string roomId, Player player);
         Player GetPlayer(string roomId, string playerId);
         RoomInfoModel GetRoomInfoModel(string roomId);

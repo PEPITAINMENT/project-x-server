@@ -7,9 +7,9 @@ namespace GameBussinesLogic.Comparer
     [Flags]
     public enum GuessSongProperties
     { 
-        None,
-        Author,
-        Title,
+        None = 0,
+        Author = 2,
+        Title = 4,
     }
 
     public class SongCompareEngine : ISongCompareEngine

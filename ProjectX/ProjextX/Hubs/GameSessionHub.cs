@@ -2,10 +2,11 @@
 using GameBussinesLogic.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using ProjextX.Services.Interfaces;
 using Server.HubNotificator;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 
 namespace ProjextX.Hubs
@@ -57,6 +58,22 @@ namespace ProjextX.Hubs
             if (points != 0) {
                 await this.Clients.Group(roomId).SendAsync("onUserAnswer", player);
             }
+        }
+
+        public async Task Disconnect(string roomId)
+        {
+            var userId = this.Context.User.Identity?.Name;
+            _roomService.Disconnect(roomId, userId);
+            var room = _roomService.Get(roomId);
+
+            if (room.Players.Count == 0)
+            {
+                _roomService.Remove(roomId);
+                await this.Clients.Group(roomId).SendAsync("onRoomDeleted");
+                return;
+            }
+           
+            await this.Clients.Group(roomId).SendAsync("onUserExit", userId);
         }
     }
 }
